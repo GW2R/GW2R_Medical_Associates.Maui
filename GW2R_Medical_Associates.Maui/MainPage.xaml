@@ -1,0 +1,102 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="GW2R_Medical_Associates.Maui.MainPage"
+             xmlns:model ="clr-namespace:GW2R_Medical_Associates.Maui.Models"
+             xmlns:viewmodel ="clr-namespace:GW2R_Medical_Associates.Maui.ViewModels"
+             x:DataType ="viewmodel:PatientEMRViewModel"
+             Title="{Binding Title}">
+    <Grid>
+    <Grid ColumnSpacing="1" RowSpacing="1" Padding="5"..>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <VerticalStackLayout Padding="5" Grid.Row="0" Margin="9">
+            <Entry x:Name="FirstName" Placeholder="Enter FirstName" Text="{Binding FirstName}" />
+            <Entry x:Name="FirstName" Placeholder="Enter LastName" Text="{Binding LastName}" />
+            <Entry x:Name="FirstName" Placeholder="Enter DOB" Text="{Binding DOB}" />
+            <Entry x:Name="FirstName" Placeholder="Enter TelephoneNo" Text="{Binding TelephoneNo}" />
+            <Entry x:Name="FirstName" Placeholder="Enter NextOfKin" Text="{Binding NextOfKin}" />
+            <Entry x:Name="FirstName" Placeholder="Enter Address" Text="{Binding Address}" />
+            <Entry x:Name="FirstName" Placeholder="Enter MedicalHistory" Text="{Binding MedicalHistory}" />
+            <Entry x:Name="FirstName" Placeholder="Enter Prescriptions" Text="{Binding Prescriptions}" />
+            <Entry x:Name="FirstName" Placeholder="Enter TestResults" Text="{Binding TestResults}" />
+        </VerticalStackLayout>
+
+        <Button Text="Add EMR" Grid.Row="1" IsEnabled="{Binding IsNotLoading}"
+                Command="{Binding AddEMRCommand}" Margin="9"/>
+
+        <Button Text="Fecth EMRs" Command="{Binding GetEMRListCommand}" IsEnabled="{Binding IsNotLoading}"
+                Grid.Row="2" Margin="9"/>
+
+        <RefreshView Grid.Row="4"
+                    Command="{Binding GetEMRListCommand}"
+                    IsRefreshing="{Binding IsRefreshing}">
+            <CollectionView ItemsSource="{Binding EMRs}" SelectionMode="None">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="model:EMR">
+                        <Grid Padding="10" ColumnDefinitions="*,auto">
+                            <Frame HeightRequest="70" Grid.Column="0">
+                                <Frame.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:PatientEMRViewModel}}, Path=GetEMRDetailsCommand }"
+                                                          CommandParameter="{Binding Id}" />
+                                </Frame.GestureRecognizers>
+                                <HorizontalStackLayout Padding="5" Spacing="5">
+                                    <Label Text="{Binding FirstName}"></Label>
+                                    <Label Text="{Binding LastName}"></Label>
+                                </HorizontalStackLayout>
+                            </Frame>
+                            <HorizontalStackLayout Grid.Column="1">
+                                <Button Text="Add" Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:PatientEMRViewModel}}, Path=AddEMRCommand }"
+                                        CommandParameter="{Binding Id}" Margin="9"/>
+                                <Button Text="Update" Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:PatientEMRViewModel}}, Path=UpdateEMRCommand }"
+                                        CommandParameter="{Binding Id}" Margin="9"/>
+                                    <Button Text="Delete" Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:PatientEMRViewModel}}, Path=DeleteEMRCommand }"
+                                        CommandParameter="{Binding Id}" Margin="9"/>
+                                </HorizontalStackLayout>
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </RefreshView>
+   </Grid>
+
+        <!--Grid ColumnDefinitions="*,*" ColumnSpacing="6" RowDefinitions="*, Auto">
+        <RefreshView Grid.ColumnSpan="2"
+                     Command="{Binding GetEMRListCommand}"
+                     IsRefreshing="{Binding IsRefreshing}">
+            <CollectionView ItemsSource="{Binding EMRs}" SelectionMode="None">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="model:EMR">
+                        <Frame HeightRequest="85">
+                            <Frame.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:PatientEMRViewModel}}, Path=GoToEMRDetailsCommand }" 
+                                                      CommandParameter="{Binding .}" />
+                                <DragGestureRecognizer>
+                                    
+                                </DragGestureRecognizer>
+                            </Frame.GestureRecognizers>
+                            <VerticalStackLayout Padding="10" Spacing="5">
+                                <Label Text="{Binding Make}"></Label>
+                                <Label Text="{Binding Model}"></Label>
+                            </VerticalStackLayout>
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </RefreshView>
+        
+
+        <Button Text="Fetch EMRs" Command="{Binding GetEMRListCommand}" IsEnabled="{Binding IsNotLoading}"
+                Grid.Row="1" Grid.Column="0" Margin="8">
+        </Button>
+    </Grid>
+</ContentPage>
